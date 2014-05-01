@@ -6,16 +6,19 @@ import sys
 from lxml import etree
 
 #DEBUG
-debug = 1
+debug = 0
 
 #Select school type from list below
-school_type = 0
+school_type = 2
 
+#User-Agent
+user_agent = "CodeForGermany, OK-Lab Leipzig, Schoolscraper"
+params = ""
 
 #List containing URLs to lists of schools in Leipzig
 # 0 - Gymnasien
 # 1 - Oberschulen
-# 2 - Grunschulen
+# 2 - Grundschulen
 # 3 - Gemeinschaftsschulen
 # 4 - Foerderschulen
 # 5 - Berufliche Schulen
@@ -43,7 +46,7 @@ result = []
 if debug == 1:
     print "Fetching Data"
 
-school_html = scraperwiki.scrape(urls[school_type])
+school_html = scraperwiki.scrape(urls[school_type],params,user_agent)
 school_root = lxml.html.fromstring(school_html)
 
 if debug == 1:
@@ -71,11 +74,11 @@ for school in school_root.cssselect('div[class="address-list-item address-list-i
 
     #Matching Coordinates
     root_osm = etree.fromstring(scraperwiki.scrape(nom_url_1 + address + nom_url_2))
-    print nom_url_1 + address + nom_url_2
     try:
         child = root_osm[0]
     except:
-        pass
+        print "Error"
+        continue
     lat = child.get('lat')
     lon = child.get('lon')
 
